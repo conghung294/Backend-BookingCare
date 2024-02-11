@@ -182,8 +182,121 @@ var getDetailSpecialtyById = function getDetailSpecialtyById(inputId, location) 
     };
   }());
 };
+var deleteSpecialty = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(id) {
+    var specialty;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.prev = 0;
+          _context4.next = 3;
+          return _index["default"].Specialty.findOne({
+            where: {
+              id: id
+            }
+          });
+        case 3:
+          specialty = _context4.sent;
+          if (specialty) {
+            _context4.next = 6;
+            break;
+          }
+          return _context4.abrupt("return", {
+            errCode: 2,
+            errMessage: 'User not exist'
+          });
+        case 6:
+          _context4.next = 8;
+          return _index["default"].Specialty.destroy({
+            where: {
+              id: id
+            }
+          });
+        case 8:
+          return _context4.abrupt("return", {
+            errCode: 0,
+            message: 'Specialty deleted'
+          });
+        case 11:
+          _context4.prev = 11;
+          _context4.t0 = _context4["catch"](0);
+          console.error(_context4.t0);
+        case 14:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4, null, [[0, 11]]);
+  }));
+  return function deleteSpecialty(_x7) {
+    return _ref4.apply(this, arguments);
+  };
+}();
+var updateSpecialtyData = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(data) {
+    var specialty;
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.prev = 0;
+          if (data.id) {
+            _context5.next = 3;
+            break;
+          }
+          return _context5.abrupt("return", {
+            errCode: 2,
+            errMessage: 'Missing parameter'
+          });
+        case 3:
+          _context5.next = 5;
+          return _index["default"].Specialty.findOne({
+            where: {
+              id: data.id
+            },
+            raw: false
+          });
+        case 5:
+          specialty = _context5.sent;
+          if (!specialty) {
+            _context5.next = 16;
+            break;
+          }
+          specialty.name = data.name;
+          specialty.descriptionHTML = data.descriptionHTML;
+          specialty.descriptionMarkdown = data.descriptionMarkdown;
+          specialty.image = data.image;
+          _context5.next = 13;
+          return specialty.save();
+        case 13:
+          return _context5.abrupt("return", {
+            errCode: 0,
+            errMessage: 'Updated successfully'
+          });
+        case 16:
+          return _context5.abrupt("return", {
+            errCode: 1,
+            errMessage: 'Specialty not found'
+          });
+        case 17:
+          _context5.next = 22;
+          break;
+        case 19:
+          _context5.prev = 19;
+          _context5.t0 = _context5["catch"](0);
+          console.log(_context5.t0);
+        case 22:
+        case "end":
+          return _context5.stop();
+      }
+    }, _callee5, null, [[0, 19]]);
+  }));
+  return function updateSpecialtyData(_x8) {
+    return _ref5.apply(this, arguments);
+  };
+}();
 module.exports = {
   createSpecialty: createSpecialty,
   getAllSpecialty: getAllSpecialty,
-  getDetailSpecialtyById: getDetailSpecialtyById
+  getDetailSpecialtyById: getDetailSpecialtyById,
+  deleteSpecialty: deleteSpecialty,
+  updateSpecialtyData: updateSpecialtyData
 };

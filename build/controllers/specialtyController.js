@@ -96,8 +96,62 @@ var getDetailSpecialtyById = /*#__PURE__*/function () {
     return _ref3.apply(this, arguments);
   };
 }();
+var handleEditSpecialty = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
+    var data, message;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          data = req.body;
+          _context4.next = 3;
+          return _specialtyService["default"].updateSpecialtyData(data);
+        case 3:
+          message = _context4.sent;
+          return _context4.abrupt("return", res.status(200).json(message));
+        case 5:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4);
+  }));
+  return function handleEditSpecialty(_x7, _x8) {
+    return _ref4.apply(this, arguments);
+  };
+}();
+var handleDeleteSpecialty = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
+    var message;
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
+        case 0:
+          if (req.body.id) {
+            _context5.next = 2;
+            break;
+          }
+          return _context5.abrupt("return", res.status(500).json({
+            errCode: 1,
+            errMessage: 'Missing parameter'
+          }));
+        case 2:
+          _context5.next = 4;
+          return _specialtyService["default"].deleteSpecialty(req.body.id);
+        case 4:
+          message = _context5.sent;
+          return _context5.abrupt("return", res.status(200).json(message));
+        case 6:
+        case "end":
+          return _context5.stop();
+      }
+    }, _callee5);
+  }));
+  return function handleDeleteSpecialty(_x9, _x10) {
+    return _ref5.apply(this, arguments);
+  };
+}();
 module.exports = {
   createSpecialty: createSpecialty,
   getAllSpecialty: getAllSpecialty,
-  getDetailSpecialtyById: getDetailSpecialtyById
+  getDetailSpecialtyById: getDetailSpecialtyById,
+  handleEditSpecialty: handleEditSpecialty,
+  handleDeleteSpecialty: handleDeleteSpecialty
 };

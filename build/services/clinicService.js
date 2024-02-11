@@ -165,8 +165,122 @@ var getDetailClinicById = function getDetailClinicById(inputId) {
     };
   }());
 };
+var deleteClinic = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(id) {
+    var clinic;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.prev = 0;
+          _context4.next = 3;
+          return _index["default"].Clinic.findOne({
+            where: {
+              id: id
+            }
+          });
+        case 3:
+          clinic = _context4.sent;
+          if (clinic) {
+            _context4.next = 6;
+            break;
+          }
+          return _context4.abrupt("return", {
+            errCode: 2,
+            errMessage: 'User not exist'
+          });
+        case 6:
+          _context4.next = 8;
+          return _index["default"].Clinic.destroy({
+            where: {
+              id: id
+            }
+          });
+        case 8:
+          return _context4.abrupt("return", {
+            errCode: 0,
+            message: 'Clinic deleted'
+          });
+        case 11:
+          _context4.prev = 11;
+          _context4.t0 = _context4["catch"](0);
+          console.error(_context4.t0);
+        case 14:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4, null, [[0, 11]]);
+  }));
+  return function deleteClinic(_x7) {
+    return _ref4.apply(this, arguments);
+  };
+}();
+var updateClinicData = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(data) {
+    var clinic;
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.prev = 0;
+          if (data.id) {
+            _context5.next = 3;
+            break;
+          }
+          return _context5.abrupt("return", {
+            errCode: 2,
+            errMessage: 'Missing parameter'
+          });
+        case 3:
+          _context5.next = 5;
+          return _index["default"].Clinic.findOne({
+            where: {
+              id: data.id
+            },
+            raw: false
+          });
+        case 5:
+          clinic = _context5.sent;
+          if (!clinic) {
+            _context5.next = 17;
+            break;
+          }
+          clinic.name = data.name;
+          clinic.address = data.address;
+          clinic.descriptionHTML = data.descriptionHTML;
+          clinic.descriptionMarkdown = data.descriptionMarkdown;
+          clinic.image = data.image;
+          _context5.next = 14;
+          return clinic.save();
+        case 14:
+          return _context5.abrupt("return", {
+            errCode: 0,
+            errMessage: 'Updated successfully'
+          });
+        case 17:
+          return _context5.abrupt("return", {
+            errCode: 1,
+            errMessage: 'Clinic not found'
+          });
+        case 18:
+          _context5.next = 23;
+          break;
+        case 20:
+          _context5.prev = 20;
+          _context5.t0 = _context5["catch"](0);
+          console.log(_context5.t0);
+        case 23:
+        case "end":
+          return _context5.stop();
+      }
+    }, _callee5, null, [[0, 20]]);
+  }));
+  return function updateClinicData(_x8) {
+    return _ref5.apply(this, arguments);
+  };
+}();
 module.exports = {
   createClinic: createClinic,
   getAllClinic: getAllClinic,
-  getDetailClinicById: getDetailClinicById
+  getDetailClinicById: getDetailClinicById,
+  deleteClinic: deleteClinic,
+  updateClinicData: updateClinicData
 };

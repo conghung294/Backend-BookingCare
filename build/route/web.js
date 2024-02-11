@@ -38,9 +38,13 @@ var initWebRoutes = function initWebRoutes(app) {
   router.post('/api/create-new-specialty', _specialtyController["default"].createSpecialty);
   router.get('/api/get-specialty', _specialtyController["default"].getAllSpecialty);
   router.get('/api/get-detail-specialty-by-id', _specialtyController["default"].getDetailSpecialtyById);
+  router.put('/api/edit-specialty', _specialtyController["default"].handleEditSpecialty);
+  router["delete"]('/api/delete-specialty', _specialtyController["default"].handleDeleteSpecialty);
   router.post('/api/create-new-clinic', _clinicController["default"].createClinic);
   router.get('/api/get-clinic', _clinicController["default"].getAllClinic);
   router.get('/api/get-detail-clinic-by-id', _clinicController["default"].getDetailClinicById);
+  router.put('/api/edit-clinic', _clinicController["default"].handleEditClinic);
+  router["delete"]('/api/delete-clinic', _clinicController["default"].handleDeleteClinic);
   return app.use('/', router);
 };
 module.exports = initWebRoutes;
