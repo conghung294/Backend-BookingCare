@@ -89,8 +89,69 @@ let getDetailSpecialtyById = (inputId, location) => {
   });
 };
 
+let deleteSpecialty = async (id) => {
+  try {
+    let specialty = await db.Specialty.findOne({
+      where: { id: id },
+    });
+    if (!specialty) {
+      return {
+        errCode: 2,
+        errMessage: 'User not exist',
+      };
+    }
+
+    await db.Specialty.destroy({
+      where: { id: id },
+    });
+
+    return {
+      errCode: 0,
+      message: 'Specialty deleted',
+    };
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+let updateSpecialtyData = async (data) => {
+  try {
+    if (!data.id) {
+      return {
+        errCode: 2,
+        errMessage: 'Missing parameter',
+      };
+    }
+    let specialty = await db.Specialty.findOne({
+      where: { id: data.id },
+      raw: false,
+    });
+    if (specialty) {
+      specialty.name = data.name;
+      specialty.descriptionHTML = data.descriptionHTML;
+      specialty.descriptionMarkdown = data.descriptionMarkdown;
+      specialty.image = data.image;
+
+      await specialty.save();
+      return {
+        errCode: 0,
+        errMessage: 'Updated successfully',
+      };
+    } else {
+      return {
+        errCode: 1,
+        errMessage: 'Specialty not found',
+      };
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 module.exports = {
   createSpecialty,
   getAllSpecialty,
   getDetailSpecialtyById,
+  deleteSpecialty,
+  updateSpecialtyData,
 };

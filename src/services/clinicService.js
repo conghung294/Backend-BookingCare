@@ -90,8 +90,70 @@ let getDetailClinicById = (inputId) => {
   });
 };
 
+let deleteClinic = async (id) => {
+  try {
+    let clinic = await db.Clinic.findOne({
+      where: { id: id },
+    });
+    if (!clinic) {
+      return {
+        errCode: 2,
+        errMessage: 'User not exist',
+      };
+    }
+
+    await db.Clinic.destroy({
+      where: { id: id },
+    });
+
+    return {
+      errCode: 0,
+      message: 'Clinic deleted',
+    };
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+let updateClinicData = async (data) => {
+  try {
+    if (!data.id) {
+      return {
+        errCode: 2,
+        errMessage: 'Missing parameter',
+      };
+    }
+    let clinic = await db.Clinic.findOne({
+      where: { id: data.id },
+      raw: false,
+    });
+    if (clinic) {
+      clinic.name = data.name;
+      clinic.address = data.address;
+      clinic.descriptionHTML = data.descriptionHTML;
+      clinic.descriptionMarkdown = data.descriptionMarkdown;
+      clinic.image = data.image;
+
+      await clinic.save();
+      return {
+        errCode: 0,
+        errMessage: 'Updated successfully',
+      };
+    } else {
+      return {
+        errCode: 1,
+        errMessage: 'Clinic not found',
+      };
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 module.exports = {
   createClinic,
   getAllClinic,
   getDetailClinicById,
+  deleteClinic,
+  updateClinicData,
 };
