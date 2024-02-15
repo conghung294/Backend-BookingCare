@@ -25,10 +25,21 @@ let getTopDoctorHome = async (limitInput) => {
           as: 'genderData',
           attributes: ['valueEn', 'valueVi'],
         },
+        {
+          model: db.Doctor_Info,
+          include: [
+            {
+              model: db.Specialty,
+              as: 'specialtyData',
+              attributes: ['name'],
+            },
+          ],
+        },
       ],
       raw: true,
       nest: true,
     });
+
     return {
       errCode: 0,
       data: users,
@@ -44,9 +55,14 @@ let getAllDoctors = () => {
       let doctors = await db.User.findAll({
         where: { roleId: 'R2' },
         attributes: {
-          exclude: ['password', 'image'],
+          exclude: ['password'],
         },
       });
+      if (doctors && doctors.length > 0) {
+        doctors.forEach((item) => {
+          item.image = Buffer.from(item.image, 'base64').toString('binary');
+        });
+      }
       resolve({
         errCode: 0,
         data: doctors,
