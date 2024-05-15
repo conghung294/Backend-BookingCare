@@ -32,13 +32,13 @@ let handleGetAllUsers = async (req, res) => {
         DT: data.DT,
       });
     } else {
-      let id = req.query.id;
-      let users = await userService.getAllUsers(id);
-      return res.status(200).json({
-        errCode: 0,
-        errMessage: 'OK',
-        users,
-      });
+      // let id = req.query.id;
+      // let users = await userService.getAllUsers(id);
+      // return res.status(200).json({
+      //   errCode: 0,
+      //   errMessage: 'OK',
+      //   users,
+      // });
     }
   } catch (e) {
     return res.status(500).json({
