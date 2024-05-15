@@ -34,6 +34,10 @@ module.exports = function (sequelize, DataTypes) {
        */
       function associate(models) {
         // define association here
+        Specialty.hasMany(models.Doctor_Info, {
+          foreignKey: 'specialtyId',
+          as: 'specialtyData'
+        });
       }
     }]);
     return Specialty;

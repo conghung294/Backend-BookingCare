@@ -20,7 +20,7 @@ var handleLogin = /*#__PURE__*/function () {
           }
           return _context.abrupt("return", res.status(500).json({
             errCode: 1,
-            message: "Missing input value"
+            message: 'Missing input value'
           }));
         case 4:
           _context.next = 6;
@@ -44,25 +44,53 @@ var handleLogin = /*#__PURE__*/function () {
 }();
 var handleGetAllUsers = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-    var id, users;
+    var page, limit, data, id, users;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
+          _context2.prev = 0;
+          if (!(req.query.page && req.query.limit)) {
+            _context2.next = 10;
+            break;
+          }
+          page = req.query.page;
+          limit = req.query.limit;
+          _context2.next = 6;
+          return _userService["default"].getUserWithPagination(+page, +limit);
+        case 6:
+          data = _context2.sent;
+          return _context2.abrupt("return", res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT
+          }));
+        case 10:
           id = req.query.id;
-          _context2.next = 3;
+          _context2.next = 13;
           return _userService["default"].getAllUsers(id);
-        case 3:
+        case 13:
           users = _context2.sent;
           return _context2.abrupt("return", res.status(200).json({
             errCode: 0,
-            errMessage: "OK",
+            errMessage: 'OK',
             users: users
           }));
-        case 5:
+        case 15:
+          _context2.next = 20;
+          break;
+        case 17:
+          _context2.prev = 17;
+          _context2.t0 = _context2["catch"](0);
+          return _context2.abrupt("return", res.status(500).json({
+            EM: 'error from sever',
+            EC: '-1',
+            DT: ''
+          }));
+        case 20:
         case "end":
           return _context2.stop();
       }
-    }, _callee2);
+    }, _callee2, null, [[0, 17]]);
   }));
   return function handleGetAllUsers(_x3, _x4) {
     return _ref2.apply(this, arguments);
@@ -123,7 +151,7 @@ var handleDeleteUser = /*#__PURE__*/function () {
           }
           return _context5.abrupt("return", res.status(500).json({
             errCode: 1,
-            errMessage: "Missing parameter"
+            errMessage: 'Missing parameter'
           }));
         case 2:
           _context5.next = 4;
@@ -159,7 +187,7 @@ var getAllCode = /*#__PURE__*/function () {
           console.log(_context6.t0);
           return _context6.abrupt("return", res.status(500).json({
             errCode: -1,
-            errMessage: "Error from server"
+            errMessage: 'Error from server'
           }));
         case 11:
         case "end":

@@ -36,6 +36,13 @@ var getTopDoctorHome = /*#__PURE__*/function () {
               model: _index["default"].Allcode,
               as: 'genderData',
               attributes: ['valueEn', 'valueVi']
+            }, {
+              model: _index["default"].Doctor_Info,
+              include: [{
+                model: _index["default"].Specialty,
+                as: 'specialtyData',
+                attributes: ['name']
+              }]
             }],
             raw: true,
             nest: true
@@ -74,26 +81,31 @@ var getAllDoctors = function getAllDoctors() {
                 roleId: 'R2'
               },
               attributes: {
-                exclude: ['password', 'image']
+                exclude: ['password']
               }
             });
           case 3:
             doctors = _context2.sent;
+            if (doctors && doctors.length > 0) {
+              doctors.forEach(function (item) {
+                item.image = Buffer.from(item.image, 'base64').toString('binary');
+              });
+            }
             resolve({
               errCode: 0,
               data: doctors
             });
-            _context2.next = 10;
+            _context2.next = 11;
             break;
-          case 7:
-            _context2.prev = 7;
+          case 8:
+            _context2.prev = 8;
             _context2.t0 = _context2["catch"](0);
             reject(_context2.t0);
-          case 10:
+          case 11:
           case "end":
             return _context2.stop();
         }
-      }, _callee2, null, [[0, 7]]);
+      }, _callee2, null, [[0, 8]]);
     }));
     return function (_x2, _x3) {
       return _ref2.apply(this, arguments);
@@ -326,7 +338,7 @@ var getDetailDoctorById = function getDetailDoctorById(inputId) {
 var bulkCreateSchedule = function bulkCreateSchedule(data) {
   return new Promise( /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(resolve, reject) {
-      var schedule, existing, toCreate;
+      var schedule, existing;
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) switch (_context5.prev = _context5.next) {
           case 0:
@@ -339,7 +351,7 @@ var bulkCreateSchedule = function bulkCreateSchedule(data) {
               errCode: 1,
               errMessage: 'Missing required parameters'
             });
-            _context5.next = 15;
+            _context5.next = 13;
             break;
           case 5:
             schedule = data.arrSchedule;
@@ -349,42 +361,37 @@ var bulkCreateSchedule = function bulkCreateSchedule(data) {
               });
             }
             _context5.next = 9;
-            return _index["default"].Schedule.findAll({
+            return _index["default"].Schedule.destroy({
               where: {
                 doctorId: data.doctorId,
                 date: data.date
-              },
-              attributes: ['timeType', 'date', 'doctorId', 'maxNumber']
+              }
+              // attributes: ['timeType', 'date', 'doctorId', 'maxNumber'],
             });
           case 9:
             existing = _context5.sent;
-            // compare different
-            toCreate = _lodash["default"].differenceWith(schedule, existing, function (a, b) {
-              return a.timeType === b.timeType && +a.date === +b.date;
-            });
-            if (!(toCreate && toCreate.length > 0)) {
-              _context5.next = 14;
-              break;
-            }
-            _context5.next = 14;
-            return _index["default"].Schedule.bulkCreate(toCreate);
-          case 14:
+            _context5.next = 12;
+            return _index["default"].Schedule.bulkCreate(schedule);
+          case 12:
+            // if (toCreate && toCreate.length > 0) {
+            // }
+
             resolve({
               errCode: 0,
               errMessage: 'Successfully created schedule'
             });
-          case 15:
-            _context5.next = 20;
+          case 13:
+            _context5.next = 18;
             break;
-          case 17:
-            _context5.prev = 17;
+          case 15:
+            _context5.prev = 15;
             _context5.t0 = _context5["catch"](0);
             reject(_context5.t0);
-          case 20:
+          case 18:
           case "end":
             return _context5.stop();
         }
-      }, _callee5, null, [[0, 17]]);
+      }, _callee5, null, [[0, 15]]);
     }));
     return function (_x8, _x9) {
       return _ref5.apply(this, arguments);

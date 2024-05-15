@@ -122,13 +122,64 @@ var checkUserEmail = function checkUserEmail(useremail) {
     };
   }());
 };
-var getAllUsers = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(userId) {
-    var users;
+var getUserWithPagination = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(page, limit) {
+    var offset, _yield$db$User$findAn, count, rows, totalPages, data;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
           _context3.prev = 0;
+          offset = (page - 1) * limit;
+          _context3.next = 4;
+          return _index["default"].User.findAndCountAll({
+            offset: offset,
+            limit: limit,
+            attributes: ['id', 'firstName', 'lastName', 'email', 'address', 'phoneNumber', 'gender', 'image', 'positionId'],
+            include: [{
+              model: _index["default"].Allcode,
+              as: 'roleData'
+              // attributes: ['name', 'description', 'id'],
+            }],
+            order: [['id', 'DESC']],
+            raw: true,
+            nest: true
+          });
+        case 4:
+          _yield$db$User$findAn = _context3.sent;
+          count = _yield$db$User$findAn.count;
+          rows = _yield$db$User$findAn.rows;
+          totalPages = Math.ceil(count / limit);
+          data = {
+            totalRows: count,
+            totalPages: totalPages,
+            users: rows
+          };
+          return _context3.abrupt("return", {
+            EM: 'Get data successfully',
+            EC: 0,
+            DT: data
+          });
+        case 12:
+          _context3.prev = 12;
+          _context3.t0 = _context3["catch"](0);
+          console.log(_context3.t0);
+        case 15:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3, null, [[0, 12]]);
+  }));
+  return function getUserWithPagination(_x5, _x6) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+var getAllUsers = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(userId) {
+    var users;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.prev = 0;
           users = '';
           if (userId === 'ALL') {
             users = _index["default"].User.findAll({
@@ -147,96 +198,83 @@ var getAllUsers = /*#__PURE__*/function () {
               }
             });
           }
-          return _context3.abrupt("return", users);
+          return _context4.abrupt("return", users);
         case 7:
-          _context3.prev = 7;
-          _context3.t0 = _context3["catch"](0);
-          console.log(_context3.t0);
+          _context4.prev = 7;
+          _context4.t0 = _context4["catch"](0);
+          console.log(_context4.t0);
         case 10:
         case "end":
-          return _context3.stop();
+          return _context4.stop();
       }
-    }, _callee3, null, [[0, 7]]);
+    }, _callee4, null, [[0, 7]]);
   }));
-  return function getAllUsers(_x5) {
-    return _ref3.apply(this, arguments);
-  };
-}();
-var createNewUser = /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(data) {
-    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-      while (1) switch (_context5.prev = _context5.next) {
-        case 0:
-          return _context5.abrupt("return", new Promise( /*#__PURE__*/function () {
-            var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(resolve, reject) {
-              var check, hashPasswordFromBcrypt;
-              return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-                while (1) switch (_context4.prev = _context4.next) {
-                  case 0:
-                    _context4.prev = 0;
-                    _context4.next = 3;
-                    return checkUserEmail(data.email);
-                  case 3:
-                    check = _context4.sent;
-                    if (!(check === true)) {
-                      _context4.next = 8;
-                      break;
-                    }
-                    resolve({
-                      errCode: '1',
-                      errMessage: 'Your email has already been, please try other email'
-                    });
-                    _context4.next = 13;
-                    break;
-                  case 8:
-                    _context4.next = 10;
-                    return hashUserPassword(data.password);
-                  case 10:
-                    hashPasswordFromBcrypt = _context4.sent;
-                    _context4.next = 13;
-                    return _index["default"].User.create({
-                      email: data.email,
-                      password: hashPasswordFromBcrypt,
-                      firstName: data.firstName,
-                      lastName: data.lastName,
-                      address: data.address,
-                      phoneNumber: data.phoneNumber,
-                      gender: data.gender,
-                      roleId: data.roleId,
-                      positionId: data.positionId,
-                      image: data.avatar
-                    });
-                  case 13:
-                    resolve({
-                      errCode: 0,
-                      message: 'OK'
-                    });
-                    _context4.next = 19;
-                    break;
-                  case 16:
-                    _context4.prev = 16;
-                    _context4.t0 = _context4["catch"](0);
-                    reject(_context4.t0);
-                  case 19:
-                  case "end":
-                    return _context4.stop();
-                }
-              }, _callee4, null, [[0, 16]]);
-            }));
-            return function (_x7, _x8) {
-              return _ref5.apply(this, arguments);
-            };
-          }()));
-        case 1:
-        case "end":
-          return _context5.stop();
-      }
-    }, _callee5);
-  }));
-  return function createNewUser(_x6) {
+  return function getAllUsers(_x7) {
     return _ref4.apply(this, arguments);
   };
 }();
+var createNewUser = function createNewUser(data) {
+  return new Promise( /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(resolve, reject) {
+      var check, hashPasswordFromBcrypt;
+      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) switch (_context5.prev = _context5.next) {
+          case 0:
+            _context5.prev = 0;
+            _context5.next = 3;
+            return checkUserEmail(data.email);
+          case 3:
+            check = _context5.sent;
+            if (!(check === true)) {
+              _context5.next = 8;
+              break;
+            }
+            resolve({
+              errCode: '1',
+              errMessage: 'Your email has already been, please try other email'
+            });
+            _context5.next = 13;
+            break;
+          case 8:
+            _context5.next = 10;
+            return hashUserPassword(data.password);
+          case 10:
+            hashPasswordFromBcrypt = _context5.sent;
+            _context5.next = 13;
+            return _index["default"].User.create({
+              email: data.email,
+              password: hashPasswordFromBcrypt,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              address: data.address,
+              phoneNumber: data.phoneNumber,
+              gender: data.gender,
+              roleId: data.roleId,
+              positionId: data.positionId,
+              image: data.avatar
+            });
+          case 13:
+            resolve({
+              errCode: 0,
+              message: 'OK'
+            });
+            _context5.next = 19;
+            break;
+          case 16:
+            _context5.prev = 16;
+            _context5.t0 = _context5["catch"](0);
+            reject(_context5.t0);
+          case 19:
+          case "end":
+            return _context5.stop();
+        }
+      }, _callee5, null, [[0, 16]]);
+    }));
+    return function (_x8, _x9) {
+      return _ref5.apply(this, arguments);
+    };
+  }());
+};
 var hashUserPassword = function hashUserPassword(password) {
   return new Promise( /*#__PURE__*/function () {
     var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(resolve, reject) {
@@ -262,7 +300,7 @@ var hashUserPassword = function hashUserPassword(password) {
         }
       }, _callee6, null, [[0, 7]]);
     }));
-    return function (_x9, _x10) {
+    return function (_x10, _x11) {
       return _ref6.apply(this, arguments);
     };
   }());
@@ -312,7 +350,7 @@ var deleteUser = /*#__PURE__*/function () {
       }
     }, _callee7, null, [[0, 11]]);
   }));
-  return function deleteUser(_x11) {
+  return function deleteUser(_x12) {
     return _ref7.apply(this, arguments);
   };
 }();
@@ -378,7 +416,7 @@ var updateUserData = /*#__PURE__*/function () {
       }
     }, _callee8, null, [[0, 23]]);
   }));
-  return function updateUserData(_x12) {
+  return function updateUserData(_x13) {
     return _ref8.apply(this, arguments);
   };
 }();
@@ -424,7 +462,7 @@ var getAllCodeService = /*#__PURE__*/function () {
       }
     }, _callee9, null, [[0, 12]]);
   }));
-  return function getAllCodeService(_x13) {
+  return function getAllCodeService(_x14) {
     return _ref9.apply(this, arguments);
   };
 }();
@@ -434,5 +472,6 @@ module.exports = {
   createNewUser: createNewUser,
   deleteUser: deleteUser,
   updateUserData: updateUserData,
-  getAllCodeService: getAllCodeService
+  getAllCodeService: getAllCodeService,
+  getUserWithPagination: getUserWithPagination
 };

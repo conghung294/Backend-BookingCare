@@ -44,6 +44,11 @@ module.exports = function (sequelize, DataTypes) {
           targetKey: 'keyMap',
           as: 'genderData'
         });
+        User.belongsTo(models.Allcode, {
+          foreignKey: 'roleId',
+          targetKey: 'keyMap',
+          as: 'roleData'
+        });
         User.hasOne(models.Markdown, {
           foreignKey: 'doctorId'
         });
@@ -57,6 +62,9 @@ module.exports = function (sequelize, DataTypes) {
         User.hasMany(models.Booking, {
           foreignKey: 'patientId',
           as: 'patientData'
+        });
+        User.hasOne(models.Doctor_Info, {
+          foreignKey: 'doctorId'
         });
       }
     }]);
