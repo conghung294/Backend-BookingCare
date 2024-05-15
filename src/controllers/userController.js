@@ -1,4 +1,4 @@
-import userService from "../services/userService";
+import userService from '../services/userService';
 
 let handleLogin = async (req, res) => {
   let email = req.body.email;
@@ -7,7 +7,7 @@ let handleLogin = async (req, res) => {
   if (!email || !password) {
     return res.status(500).json({
       errCode: 1,
-      message: "Missing input value",
+      message: 'Missing input value',
     });
   }
 
@@ -21,13 +21,32 @@ let handleLogin = async (req, res) => {
 };
 
 let handleGetAllUsers = async (req, res) => {
-  let id = req.query.id;
-  let users = await userService.getAllUsers(id);
-  return res.status(200).json({
-    errCode: 0,
-    errMessage: "OK",
-    users,
-  });
+  try {
+    if (req.query.page && req.query.limit) {
+      let page = req.query.page;
+      let limit = req.query.limit;
+      let data = await userService.getUserWithPagination(+page, +limit);
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    } else {
+      let id = req.query.id;
+      let users = await userService.getAllUsers(id);
+      return res.status(200).json({
+        errCode: 0,
+        errMessage: 'OK',
+        users,
+      });
+    }
+  } catch (e) {
+    return res.status(500).json({
+      EM: 'error from sever',
+      EC: '-1',
+      DT: '',
+    });
+  }
 };
 
 let handleCreateNewUser = async (req, res) => {
@@ -46,7 +65,7 @@ let handleDeleteUser = async (req, res) => {
   if (!req.body.id) {
     return res.status(500).json({
       errCode: 1,
-      errMessage: "Missing parameter",
+      errMessage: 'Missing parameter',
     });
   }
   let message = await userService.deleteUser(req.body.id);
@@ -61,7 +80,7 @@ let getAllCode = async (req, res) => {
     console.log(e);
     return res.status(500).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: 'Error from server',
     });
   }
 };

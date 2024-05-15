@@ -258,19 +258,19 @@ let bulkCreateSchedule = (data) => {
           });
         }
 
-        let existing = await db.Schedule.findAll({
+        let existing = await db.Schedule.destroy({
           where: { doctorId: data.doctorId, date: data.date },
-          attributes: ['timeType', 'date', 'doctorId', 'maxNumber'],
+          // attributes: ['timeType', 'date', 'doctorId', 'maxNumber'],
         });
-
+        // await existing.delete();
         // compare different
-        let toCreate = _.differenceWith(schedule, existing, (a, b) => {
-          return a.timeType === b.timeType && +a.date === +b.date;
-        });
+        // let toCreate = _.differenceWith(schedule, existing, (a, b) => {
+        //   return a.timeType === b.timeType && +a.date === +b.date;
+        // });
 
-        if (toCreate && toCreate.length > 0) {
-          await db.Schedule.bulkCreate(toCreate);
-        }
+        await db.Schedule.bulkCreate(schedule);
+        // if (toCreate && toCreate.length > 0) {
+        // }
 
         resolve({
           errCode: 0,

@@ -61,6 +61,53 @@ let checkUserEmail = (useremail) => {
   });
 };
 
+const getUserWithPagination = async (page, limit) => {
+  try {
+    let offset = (page - 1) * limit;
+
+    let { count, rows } = await db.User.findAndCountAll({
+      offset: offset,
+      limit: limit,
+      attributes: [
+        'id',
+        'firstName',
+        'lastName',
+        'email',
+        'address',
+        'phoneNumber',
+        'gender',
+        'image',
+        'positionId',
+      ],
+      include: [
+        {
+          model: db.Allcode,
+          as: 'roleData',
+          // attributes: ['name', 'description', 'id'],
+        },
+      ],
+      order: [['id', 'DESC']],
+      raw: true,
+      nest: true,
+    });
+
+    let totalPages = Math.ceil(count / limit);
+    let data = {
+      totalRows: count,
+      totalPages: totalPages,
+      users: rows,
+    };
+
+    return {
+      EM: 'Get data successfully',
+      EC: 0,
+      DT: data,
+    };
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 let getAllUsers = async (userId) => {
   try {
     let users = '';
@@ -85,7 +132,7 @@ let getAllUsers = async (userId) => {
   }
 };
 
-let createNewUser = async (data) => {
+let createNewUser = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       let check = await checkUserEmail(data.email);
@@ -225,4 +272,5 @@ module.exports = {
   deleteUser,
   updateUserData,
   getAllCodeService,
+  getUserWithPagination,
 };
